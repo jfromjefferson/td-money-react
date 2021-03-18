@@ -2,11 +2,20 @@ import { useState, useEffect } from 'react'
 import { Container } from './styles'
 import { api } from '../../services/api'
 
+interface Transaction {
+    id: number,
+    title: string,
+    type: string,
+    amount: number
+    category: string,
+    createdAt: string,
+}
+
 export const TransactionsTable = () => {
-    const [trasactions, setTransactions] = useState([])
+    const [transactions, setTransactions] = useState<Transaction[]>([])
 
     useEffect(() => {
-        api.get('/transactions').then(response => setTransactions(response.data))
+        api.get('/transactions').then(response => setTransactions(response.data.transactions))
     }, [])
 
     return (
@@ -22,12 +31,12 @@ export const TransactionsTable = () => {
                 </thead>
                 <tbody>
                     {
-                        Array.from(Array(5).keys()).map(item => (
-                            <tr key={item+1}>
-                                <td className="title">{item%2 === 0 ? 'Receita' : 'Despesa'}</td>
-                                <td className={item%2 === 0 ? 'deposit' : 'withdraw'} >{item%2 === 0 ? '' : '-'} R$ {(Math.random()*1000).toFixed(2)}</td>
-                                <td>Categorizar</td>
-                                <td>16/03/2021</td>
+                        transactions.map(item => (
+                            <tr key={item.id}>
+                                <td className="title">{item.title}</td>
+                                <td className={item.type} >{item.type === 'deposit' ? '' : '-'} R$ {item.amount.toFixed(2)}</td>
+                                <td>{item.category}</td>
+                                <td>{item.createdAt}</td>
                             </tr>
                         ))
                     }
