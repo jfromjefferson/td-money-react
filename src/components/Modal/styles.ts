@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 
-export const Container = styled.form`
+export const Container = styled.div`
     h2{
         color: var(--text-title);
         font-size: 1.5rem;
@@ -33,7 +33,7 @@ export const Container = styled.form`
         }
     }
 
-    button[type="submit"]{
+    #newTransaction{
         width: 100%;
         padding: 0 1.5rem;
         height: 4rem;

@@ -11,6 +11,7 @@ export const Container = styled.div`
         padding: 1.5rem 2rem;
         border-radius: 0.25rem;
         color: var(--text-title);
+        box-shadow: 0 1px 5px #b5b5b5;
 
         header{
             display: flex;
@@ -29,6 +30,5 @@ export const Container = styled.div`
             background: var(--green);
             color: #ffffff;
         }
-
     }
 `

@@ -1,10 +1,10 @@
-import { FormEvent, useState, useEffect } from 'react'
+import { useState } from 'react'
 import Modal from 'react-modal'
 import { Container, RadioBox, TransactionTypeContainer } from './styles'
 import closeImage from '../../assets/close.svg'
 import incomeImage from '../../assets/income.svg'
 import outcomeImage from '../../assets/outcome.svg'
-import { api } from '../../services/api'
+import { useTransactions } from '../../hooks/useTransactions'
 
 Modal.setAppElement('#root')
 
@@ -14,30 +14,27 @@ interface ModalProps {
 }
 
 export const TransactionModal = (props: ModalProps) => {
+    const { createTransaction } = useTransactions()
     const [type, seType] = useState('deposit')
     const [title, setTitle] = useState('')
     const [amount, setAmount] = useState(0)
     const [category, setCategory] = useState('')
 
-    const handleNewTransaction = (event: FormEvent) => {
-        event.preventDefault();
+    const handleNewTransaction = async () => {
 
-        const data = {
+        await createTransaction({
             title,
+            type,
             amount,
             category,
-            type,
-            createdAt: new Date()
-        }
+        })
+        
+        props.onRequestClose()
 
-        api.post('/transactions', data).then(response => props.onRequestClose())
-    }
-
-    useEffect(() => {
         setTitle('')
         setAmount(0)
         setCategory('')
-    }, [props.isOpen])
+    }
 
     return (
         <Modal isOpen={props.isOpen} onRequestClose={props.onRequestClose} overlayClassName="modal-overlay" className="modal-content">
@@ -45,7 +42,7 @@ export const TransactionModal = (props: ModalProps) => {
                 <img src={closeImage} alt="Close modal" onClick={props.onRequestClose} />
             </div>
 
-            <Container onSubmit={handleNewTransaction}>
+            <Container>
                 <h2>Nova transação</h2>
 
                 <input type="text" onChange={(event) => setTitle(event.target.value)} value={title} placeholder="Título" />
@@ -64,7 +61,7 @@ export const TransactionModal = (props: ModalProps) => {
                     </RadioBox>
                 </TransactionTypeContainer>
 
-                <button type="submit">Cadastrar</button>
+                <button id="newTransaction" onClick={handleNewTransaction}>Cadastrar</button>
             </Container>
         </Modal>
     )
